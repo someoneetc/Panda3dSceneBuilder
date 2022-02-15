@@ -139,12 +139,12 @@ class SceneBuilder(ShowBase):
                 camera = False
                 first = True
             elif first:#it is the room/terrain
-                scene_cfg["base"] = child.name
+                scene_cfg["base"] = os.path.join('assets/',child.name)
                 first = False
             else:
                 pos = child.getPos()
                 rot = child.getHpr()
-                prop = {"model": child.name,"position": [pos[0],pos[1],pos[2]], "rotation": [rot[0],rot[1],rot[2]]}
+                prop = {"model": os.path.join('assets/',child.name),"position": [pos[0],pos[1],pos[2]], "rotation": [rot[0],rot[1],rot[2]]}
                 scene_cfg["props"].append(prop)
         dump = open('export/scene.json',"w")
         dump.write(json.dumps(scene_cfg))
