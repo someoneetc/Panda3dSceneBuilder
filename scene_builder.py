@@ -67,8 +67,8 @@ class SceneBuilder(ShowBase):
         for p in cfg['props']:
             prop = loader.loadModel(p['model'])
             collider = prop.find('**/Collider')
+            collider.name = str(p['model']) + '__Collider'
             if collider.isEmpty():
-                print('The following prop doesn\'t have a collider: ' + p['model'])
             else:
                 self.cTrav.addCollider(collider,self.cQueue)
                 name = p['model'].rsplit('/',1)
@@ -129,8 +129,6 @@ class SceneBuilder(ShowBase):
 
 
     def export(self):
-        print(render.getChildren())
-        print((render.getChildren()[0].name))
         camera = True
         first = False
         scene_cfg = {"base": "", "props": []}
@@ -139,12 +137,12 @@ class SceneBuilder(ShowBase):
                 camera = False
                 first = True
             elif first:#it is the room/terrain
-                scene_cfg["base"] = os.path.join('assets/',child.name)
+                scene_cfg["base"] = child.name
                 first = False
             else:
                 pos = child.getPos()
                 rot = child.getHpr()
-                prop = {"model": os.path.join('assets/',child.name),"position": [pos[0],pos[1],pos[2]], "rotation": [rot[0],rot[1],rot[2]]}
+                prop = {"model": child.name,"position": [pos[0],pos[1],pos[2]], "rotation": [rot[0],rot[1],rot[2]]}
                 scene_cfg["props"].append(prop)
         dump = open('export/scene.json',"w")
         dump.write(json.dumps(scene_cfg))
@@ -219,9 +217,9 @@ class SceneBuilder(ShowBase):
                 nearPoint = render.getRelativePoint(camera,self.pickerRay.getOrigin())
                 nearVec = render.getRelativeVector(camera, self.pickerRay.getDirection())
                 if self.dragMod:
-                    self.selected.getIntoNodePath().getParent().getParent().setPos(self.pointAtY(.5,nearPoint,nearVec))
+                    self.selected.getIntoNodePath().getParent().setPos(self.pointAtY(.5,nearPoint,nearVec))
                 else:
-                    self.selected.getIntoNodePath().getParent().getParent().setPos(self.pointAtZ(.5,nearPoint,nearVec))
+                    self.selected.getIntoNodePath().getParent().setPos(self.pointAtZ(.5,nearPoint,nearVec))
             elif self.rotating:
                 mpos = Vec2(self.mouseWatcherNode.getMouse().getX(),self.mouseWatcherNode.getMouse().getY())
                 curr_h = self.selected.getIntoNodePath().getParent().getParent().getH()
@@ -232,7 +230,6 @@ class SceneBuilder(ShowBase):
                     new_pos[0] = mpos[0] - self.mousePosForRot[0]
                 else:
                     new_pos[1] = mpos[1] - self.mousePosForRot[1]
-                print(new_pos)
                 self.selected.getIntoNodePath().getParent().getParent().setHpr(curr_h + new_pos[0] * 10,curr_p + new_pos[1] * 10, curr_r)
             else:
                 self.selected.getIntoNodePath().hide()
@@ -253,7 +250,6 @@ class SceneBuilder(ShowBase):
         return task.cont
 
     def setKey(self,key,val):
-        print(key)
         self.keyMapping[key] = val
 
     def cameraControlTask(self,task):

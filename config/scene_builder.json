@@ -2,7 +2,22 @@
     "base_model": "assets/intro_room",
     "props": [
         {
-            "model": "assets/fridge"
+            "model": "assets/bench_1"
+        },
+        {
+            "model": "assets/chair_1"
+        },
+        {
+            "model": "assets/chest_1"
+        },
+        {
+            "model": "assets/chest_2"
+        },
+        {
+            "model": "assets/religuary"
+        },
+        {
+            "model": "assets/tank_1"
         }
     ]
 }
