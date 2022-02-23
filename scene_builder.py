@@ -69,6 +69,7 @@ class SceneBuilder(ShowBase):
             collider = prop.find('**/Collider')
             collider.name = str(p['model']) + '__Collider'
             if collider.isEmpty():
+                print('Skipping ' + p['model'] + ': collider is missing')
             else:
                 self.cTrav.addCollider(collider,self.cQueue)
                 name = p['model'].rsplit('/',1)
